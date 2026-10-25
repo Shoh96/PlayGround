@@ -1,0 +1,20 @@
+{
+  "name": "Scripture Showdown — Bible Trivia Arena",
+  "short_name": "Showdown",
+  "description": "A premium Bible trivia game with solo journeys, daily challenges, offline play, and live online rooms.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e20",
+  "theme_color": "#0a0e20",
+  "orientation": "portrait-primary",
+  "categories": ["games", "education", "lifestyle"],
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Daily Challenge", "url": "/#/daily", "description": "Play today's challenge" },
+    { "name": "Online Arena", "url": "/#/arena", "description": "Join a live room" },
+    { "name": "Journey", "url": "/#/journey", "description": "Continue your journey" }
+  ]
+}

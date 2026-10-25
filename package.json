@@ -1,0 +1,24 @@
+{
+  "name": "scripture-showdown",
+  "version": "1.0.0",
+  "description": "A premium Bible trivia arena with solo journeys, daily challenges, offline pass-and-play, bots, and live online rooms.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node scripts/test.mjs",
+    "build:questions": "node scripts/build-questions.mjs"
+  },
+  "keywords": [
+    "bible",
+    "trivia",
+    "game",
+    "multiplayer",
+    "pwa"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.22.0"
+  }
+}
