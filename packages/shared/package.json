@@ -1,0 +1,25 @@
+{
+  "name": "@rent/shared",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./audit": "./src/audit/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@rent/tsconfig": "workspace:*",
+    "@types/node": "^24.10.1",
+    "typescript": "5.9.3",
+    "vitest": "^4.0.6"
+  }
+}

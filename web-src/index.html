@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='16' height='16' fill='%23ff7f2a'/></svg>"
+    />
+    <title>PlayGround — Rental Platform Build</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="logo">PlayGround</span>
+      <nav>
+        <a href="#stack">Stack</a>
+        <a href="#modules">Modules</a>
+        <a href="#status">Status</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Rent Platform — Build in Progress</h1>
+        <p class="lede">
+          A verified rental marketplace with an inspection/guarantee layer, immutable records,
+          and PSP-facilitated payments. Bush-hiring a small tool: the platform instructs, the
+          PSP executes, and the bot never approves money.
+        </p>
+        <div class="badges">
+          <span class="badge">Never holds customer funds</span>
+          <span class="badge">Webhook-driven &amp; idempotent</span>
+          <span class="badge">Immutable audit log</span>
+        </div>
+        <p class="served">Static preview served locally on port 3000.</p>
+      </section>
+
+      <section id="stack" class="cards">
+        <article class="card">
+          <h2>Identity &amp; KYC</h2>
+          <p>
+            Phone OTP signup and tiered verification (T1 phone+ID, T2 +address, T3 +title doc),
+            reviewed by humans.
+          </p>
+        </article>
+        <article class="card">
+          <h2>Listings &amp; Inspection</h2>
+          <p>
+            DRAFT → PENDING_INSPECTION → VERIFIED → LIVE, with geotagged media and a fixed
+            re-inspection cadence.
+          </p>
+        </article>
+        <article class="card">
+          <h2>Ledger &amp; Receipts</h2>
+          <p>
+            An append-only ledger with receipts, cash recording confirmed or disputed by the
+            tenant, and anomaly flags.
+          </p>
+        </article>
+        <article class="card">
+          <h2>Payments via PSP</h2>
+          <p>
+            MTN MoMo and Orange Money behind one interface, with a fallback slot, retries, and
+            reconciliation jobs.
+          </p>
+        </article>
+      </section>
+
+      <section id="modules" class="panel">
+        <h2>Ground rules</h2>
+        <ul class="rules">
+          <li>The bot communicates; the rules engine decides; humans judge.</li>
+          <li>No tenant is locked out because of their payment method.</li>
+          <li>Every financial or state change writes an audit entry.</li>
+          <li>Boring, well-tested libraries over novel ones.</li>
+        </ul>
+      </section>
+
+      <section id="status" class="panel">
+        <h2>Status</h2>
+        <p>
+          Phase 0 foundations: repo scaffold, static deployment pipeline, and scripted
+          desktop/mobile capture are wired up. Core phases land incrementally with tests passing
+          before each phase ships.
+        </p>
+        <p class="timestamp">Page rendered at <span id="render-time">—</span>.</p>
+      </section>
+    </main>
+
+    <footer>PlayGround · rental platform preview · served from dist/</footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
