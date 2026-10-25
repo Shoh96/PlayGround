@@ -8,7 +8,7 @@ SHELL := /bin/bash
 help:
 	@grep -E '^[a-z-]+:' Makefile
 
-dev: up deps test
+dev: up deps db-migrate test
 	@echo "-- dev stack up (postgres on :5432, redis on :6379). Starting api in watch mode (Ctrl+C to stop) --"
 	cd apps/api && LOG_PRETTY=1 pnpm dev
 
@@ -17,6 +17,9 @@ up:
 	@until docker compose -f infra/docker-compose.yml exec -T postgres pg_isready -U rent -d rent >/dev/null 2>&1; do sleep 1; done
 	@until docker compose -f infra/docker-compose.yml exec -T redis redis-cli ping >/dev/null 2>&1; do sleep 1; done
 	@echo "-- infra ready --"
+
+db-migrate:
+	cd apps/api && pnpm db:migrate
 
 down:
 	docker compose -f infra/docker-compose.yml down

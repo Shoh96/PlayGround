@@ -33,12 +33,41 @@ export interface AuditLog {
 
 export type AuditLogPort = AuditLog;
 
+/**
+ * Defense in depth shared by every audit sink (memory, postgres, bot):
+ * reject anything that smells like a mutation envelope or a silent change.
+ */
+export function validateAuditEntryPayload(entry: object): void {
+  if (Object.hasOwn(entry, "seq") || Object.hasOwn(entry, "rev")) {
+    throw new TypeError("audit entries must not carry sequence or revision fields");
+  }
+  const { actor, action, entityType, entityId, after, reason, at } = entry as Record<
+    string,
+    unknown
+  >;
+  if (typeof action !== "string" || action.length === 0) {
+    throw new TypeError("action is required");
+  }
+  if (typeof entityType !== "string" || typeof entityId !== "string") {
+    throw new TypeError("entityType/entityId are required");
+  }
+  if (after === undefined) {
+    throw new TypeError("after snapshot is required");
+  }
+  if (typeof reason !== "string" || reason.length === 0) {
+    throw new TypeError("reason is required; audit entries are never silent");
+  }
+  if (actor === undefined || at === undefined) {
+    throw new TypeError("actor and at are required");
+  }
+}
+
 export class AppendOnlyAuditLog implements AuditLog {
   private nextSeq = 1;
   private store: AuditEntry[] = [];
 
   async append<E>(entry: Omit<AuditEntry<E>, "seq">): Promise<AuditEntry<E>> {
-    this.assertImmutablePayload(entry);
+    validateAuditEntryPayload(entry);
     const full: AuditEntry<E> = Object.freeze({ ...entry, seq: this.nextSeq++ });
     this.store = [...this.store, full];
     return full;
@@ -50,31 +79,5 @@ export class AppendOnlyAuditLog implements AuditLog {
 
   size(): number {
     return this.store.length;
-  }
-
-  /** Defense in depth: reject anything that smells like a mutation envelope. */
-  private assertImmutablePayload(entry: object): void {
-    if (Object.hasOwn(entry, "seq") || Object.hasOwn(entry, "rev")) {
-      throw new TypeError("audit entries must not carry sequence or revision fields");
-    }
-    const { actor, action, entityType, entityId, after, reason, at } = entry as Record<
-      string,
-      unknown
-    >;
-    if (typeof action !== "string" || action.length === 0) {
-      throw new TypeError("action is required");
-    }
-    if (typeof entityType !== "string" || typeof entityId !== "string") {
-      throw new TypeError("entityType/entityId are required");
-    }
-    if (after === undefined) {
-      throw new TypeError("after snapshot is required");
-    }
-    if (typeof reason !== "string" || reason.length === 0) {
-      throw new TypeError("reason is required; audit entries are never silent");
-    }
-    if (actor === undefined || at === undefined) {
-      throw new TypeError("actor and at are required");
-    }
   }
 }

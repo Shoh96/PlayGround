@@ -29,6 +29,8 @@ export const KycRecord = z
   .object({
     tier: KycTier,
     status: KycStatus,
+    /** Tier requested while awaiting admin review; null unless PENDING_REVIEW. */
+    pendingTier: KycTier.nullable(),
     phoneVerifiedAt: IsoDateTime.nullable(),
     idDocumentRef: z.string().min(1).nullable(),
     addressProofRef: z.string().min(1).nullable(),
@@ -38,29 +40,31 @@ export const KycRecord = z
     verifiedBy: z.string().min(1).nullable(),
   })
   .superRefine((rec, ctx) => {
+    const rank = { NONE: 0, T1: 1, T2: 2, T3: 3 } as const;
     if (rec.status === "VERIFIED") {
       if (!rec.verifiedAt)
         ctx.addIssue({ code: "custom", message: "VERIFIED requires verifiedAt" });
       if (!rec.verifiedBy)
         ctx.addIssue({ code: "custom", message: "VERIFIED requires verifiedBy" });
     }
-    if (rec.phoneVerifiedAt && rec.tier === "NONE") {
+    if (rec.status === "PENDING_REVIEW") {
+      if (!rec.pendingTier) {
+        ctx.addIssue({ code: "custom", message: "PENDING_REVIEW requires pendingTier" });
+      } else if (rank[rec.pendingTier] !== rank[rec.tier] + 1) {
+        ctx.addIssue({
+          code: "custom",
+          message: "pendingTier must be exactly one tier above the current tier",
+        });
+      }
+    }
+    if (rec.pendingTier && rec.status !== "PENDING_REVIEW") {
       ctx.addIssue({
         code: "custom",
-        message: "phoneVerifiedAt implies at least T1",
+        message: "pendingTier is only valid while PENDING_REVIEW",
       });
     }
-    const tierRank = { NONE: 0, T1: 1, T2: 2, T3: 3 } as const;
-    const rank = tierRank[rec.tier];
-    const docRank =
-      (rec.idDocumentRef ? 1 : 0) +
-      (rec.addressProofRef ? 1 : 0) +
-      (rec.titleDocRef && rec.payoutName ? 1 : 0);
-    if (docRank > rank) {
-      ctx.addIssue({
-        code: "custom",
-        message: "documents present exceed KYC tier; upgrade tier first",
-      });
+    if (rec.verifiedAt && !rec.verifiedBy) {
+      ctx.addIssue({ code: "custom", message: "verifiedAt without verifiedBy is ambiguous" });
     }
   });
 export type KycRecord = z.infer<typeof KycRecord>;
@@ -89,6 +93,7 @@ export type User = z.infer<typeof User>;
 export const emptyKyc = (): KycRecord => ({
   tier: "NONE",
   status: "UNVERIFIED",
+  pendingTier: null,
   phoneVerifiedAt: null,
   idDocumentRef: null,
   addressProofRef: null,

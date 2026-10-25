@@ -40,10 +40,30 @@ describe("User", () => {
     expect(parsed.success).toBe(false);
   });
 
-  it("rejects docs beyond current tier", () => {
-    const parsed = User.safeParse({
+  it("allows docs staged ahead of tier only while PENDING_REVIEW", () => {
+    const staged = User.safeParse({
+      ...validOperator(),
+      kyc: {
+        ...emptyKyc(),
+        phoneVerifiedAt: NOW,
+        idDocumentRef: "doc_123",
+        status: "PENDING_REVIEW",
+        pendingTier: "T1",
+      },
+    });
+    expect(staged.success).toBe(true);
+
+    const loose = User.safeParse({
       ...validOperator(),
       kyc: { ...emptyKyc(), idDocumentRef: "doc_123" },
+    });
+    expect(loose.success).toBe(true);
+  });
+
+  it("rejects PENDING_REVIEW without pendingTier", () => {
+    const parsed = User.safeParse({
+      ...validOperator(),
+      kyc: { ...emptyKyc(), status: "PENDING_REVIEW" },
     });
     expect(parsed.success).toBe(false);
   });

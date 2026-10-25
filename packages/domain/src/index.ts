@@ -1,5 +1,6 @@
 export * from "@rent/shared";
 export * from "./entities/user.js";
+export * from "./kyc/rules.js";
 export * from "./entities/property.js";
 export * from "./entities/listing.js";
 export * from "./entities/lease.js";

@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Rent Platform API",
+    "description": "Identity, KYC, listings, ledger and payments (phased).",
+    "version": "0.1.0"
+  },
+  "components": { "schemas": {} },
+  "paths": {
+    "/openapi.json": {
+      "get": { "responses": { "200": { "description": "Default Response" } } }
+    },
+    "/health": { "get": { "responses": { "200": { "description": "Default Response" } } } },
+    "/auth/otp/request": {
+      "post": {
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phone"],
+                "additionalProperties": false,
+                "properties": {
+                  "phone": { "type": "string", "pattern": "^\\+[1-9]\\d{6,14}$" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Default Response" } }
+      }
+    },
+    "/auth/otp/verify": {
+      "post": {
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phone", "requestId", "code"],
+                "additionalProperties": false,
+                "properties": {
+                  "phone": { "type": "string", "pattern": "^\\+[1-9]\\d{6,14}$" },
+                  "requestId": { "type": "string", "minLength": 8 },
+                  "code": { "type": "string", "pattern": "^\\d{6}$" },
+                  "displayName": { "type": "string", "maxLength": 120 },
+                  "roles": { "type": "array", "items": { "type": "string" }, "maxItems": 4 }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Default Response" } }
+      }
+    },
+    "/me": {
+      "get": { "tags": ["kyc"], "responses": { "200": { "description": "Default Response" } } }
+    },
+    "/me/kyc/submissions": {
+      "post": {
+        "tags": ["kyc"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["requestedTier", "evidence"],
+                "additionalProperties": false,
+                "properties": {
+                  "requestedTier": { "type": "string", "enum": ["T1", "T2", "T3"] },
+                  "evidence": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "idDocumentRef": { "type": "string", "minLength": 1 },
+                      "addressProofRef": { "type": "string", "minLength": 1 },
+                      "titleDocRef": { "type": "string", "minLength": 1 },
+                      "payoutName": { "type": "string", "minLength": 2 }
+                    }
+                  },
+                  "expectedPayoutName": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Default Response" } }
+      }
+    },
+    "/admin/kyc/queue": {
+      "get": {
+        "tags": ["admin"],
+        "responses": { "200": { "description": "Default Response" } }
+      }
+    },
+    "/admin/kyc/{userId}/decision": {
+      "post": {
+        "tags": ["admin"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["approve", "reason"],
+                "additionalProperties": false,
+                "properties": {
+                  "approve": { "type": "boolean" },
+                  "reason": { "type": "string", "minLength": 3 }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          { "schema": { "type": "string" }, "in": "path", "name": "userId", "required": true }
+        ],
+        "responses": { "200": { "description": "Default Response" } }
+      }
+    }
+  },
+  "tags": [
+    { "name": "auth", "description": "Phone OTP signup and login" },
+    { "name": "kyc", "description": "KYC tiers, submissions and verified badge" },
+    { "name": "admin", "description": "Verification queue and decisions" }
+  ]
+}
