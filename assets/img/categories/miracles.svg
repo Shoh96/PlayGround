@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Miracles of Jesus illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1424"/><stop offset=".55" stop-color="#111a2e"/><stop offset="1" stop-color="#080d18"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#62b6c8" stop-opacity=".42"/><stop offset=".55" stop-color="#62b6c8" stop-opacity=".12"/><stop offset="1" stop-color="#62b6c8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff3cf"/><stop offset=".45" stop-color="#e8bf6b"/><stop offset="1" stop-color="#b7832f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#62b6c8"/><stop offset="1" stop-color="#fff3cf"/>
+    </linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .05"/></feComponentTransfer></filter>
+    <clipPath id="clip"><rect width="640" height="480" rx="0"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect width="640" height="480" fill="url(#bg)"/>
+    <circle cx="320" cy="210" r="240" fill="url(#glow)"/>
+    <g opacity=".26" stroke="#62b6c8" stroke-width="1" fill="none">
+      <circle cx="320" cy="210" r="178"/><circle cx="320" cy="210" r="214"/><circle cx="320" cy="210" r="146"/>
+    </g>
+    <g opacity=".16" stroke="url(#gold)" stroke-width="1.5">
+      <path d="M320 210 L550.0 210.0"/><path d="M320 210 L542.2 269.5"/><path d="M320 210 L519.2 325.0"/><path d="M320 210 L482.6 372.6"/><path d="M320 210 L435.0 409.2"/><path d="M320 210 L379.5 432.2"/><path d="M320 210 L320.0 440.0"/><path d="M320 210 L260.5 432.2"/><path d="M320 210 L205.0 409.2"/><path d="M320 210 L157.4 372.6"/><path d="M320 210 L120.8 325.0"/><path d="M320 210 L97.8 269.5"/><path d="M320 210 L90.0 210.0"/><path d="M320 210 L97.8 150.5"/><path d="M320 210 L120.8 95.0"/><path d="M320 210 L157.4 47.4"/><path d="M320 210 L205.0 10.8"/><path d="M320 210 L260.5 -12.2"/><path d="M320 210 L320.0 -20.0"/><path d="M320 210 L379.5 -12.2"/><path d="M320 210 L435.0 10.8"/><path d="M320 210 L482.6 47.4"/><path d="M320 210 L519.2 95.0"/><path d="M320 210 L542.2 150.5"/>
+    </g>
+    <g transform="translate(320 210)">
+      <circle cx="0" cy="0" r="168" fill="#080d18" fill-opacity=".55" stroke="#62b6c8" stroke-opacity=".45" stroke-width="1.5"/>
+      <g transform="scale(.94)">
+    <path d="M-106 52 Q-80 22 -48 40 Q-20 56 -6 84 Q-38 110 -76 100 Q-104 90 -106 52 Z" fill="none" stroke="url(#gold)" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M106 52 Q80 22 48 40 Q20 56 6 84 Q38 110 76 100 Q104 90 106 52 Z" fill="none" stroke="url(#gold)" stroke-width="6" stroke-linejoin="round"/>
+    <g stroke="url(#accent)" stroke-width="5" stroke-linecap="round" opacity=".9">
+      <path d="M0 -128 L0 -70"/><path d="M-58 -108 L-30 -60"/><path d="M58 -108 L30 -60"/><path d="M-104 -58 L-52 -34"/><path d="M104 -58 L52 -34"/>
+    </g>
+    <path d="M-22 -48 Q0 -70 22 -48 Q22 -8 0 12 Q-22 -8 -22 -48 Z" fill="url(#accent)" opacity=".75"/>
+    <path d="M-138 120 L138 120" stroke="url(#gold)" stroke-width="4" opacity=".5"/>
+  </g>
+    </g>
+    <path d="M0 420 Q110 368 220 420 T440 420 T640 410 L640 480 L0 480 Z" fill="#070b14" opacity=".8"/>
+    <path d="M0 436 Q120 396 240 436 T480 432 T640 440" fill="none" stroke="#62b6c8" stroke-opacity=".28" stroke-width="1.5"/>
+    <rect width="640" height="480" filter="url(#grain)" opacity=".55"/>
+    <rect x="12" y="12" width="616" height="456" rx="18" fill="none" stroke="url(#gold)" stroke-opacity=".18"/>
+  </g>
+</svg>

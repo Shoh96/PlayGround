@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Judges &amp; Conquest illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1424"/><stop offset=".55" stop-color="#111a2e"/><stop offset="1" stop-color="#080d18"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#b25c50" stop-opacity=".42"/><stop offset=".55" stop-color="#b25c50" stop-opacity=".12"/><stop offset="1" stop-color="#b25c50" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff3cf"/><stop offset=".45" stop-color="#e8bf6b"/><stop offset="1" stop-color="#b7832f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b25c50"/><stop offset="1" stop-color="#fff3cf"/>
+    </linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .05"/></feComponentTransfer></filter>
+    <clipPath id="clip"><rect width="640" height="480" rx="0"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect width="640" height="480" fill="url(#bg)"/>
+    <circle cx="320" cy="210" r="240" fill="url(#glow)"/>
+    <g opacity=".26" stroke="#b25c50" stroke-width="1" fill="none">
+      <circle cx="320" cy="210" r="178"/><circle cx="320" cy="210" r="214"/><circle cx="320" cy="210" r="146"/>
+    </g>
+    <g opacity=".16" stroke="url(#gold)" stroke-width="1.5">
+      <path d="M320 210 L550.0 210.0"/><path d="M320 210 L542.2 269.5"/><path d="M320 210 L519.2 325.0"/><path d="M320 210 L482.6 372.6"/><path d="M320 210 L435.0 409.2"/><path d="M320 210 L379.5 432.2"/><path d="M320 210 L320.0 440.0"/><path d="M320 210 L260.5 432.2"/><path d="M320 210 L205.0 409.2"/><path d="M320 210 L157.4 372.6"/><path d="M320 210 L120.8 325.0"/><path d="M320 210 L97.8 269.5"/><path d="M320 210 L90.0 210.0"/><path d="M320 210 L97.8 150.5"/><path d="M320 210 L120.8 95.0"/><path d="M320 210 L157.4 47.4"/><path d="M320 210 L205.0 10.8"/><path d="M320 210 L260.5 -12.2"/><path d="M320 210 L320.0 -20.0"/><path d="M320 210 L379.5 -12.2"/><path d="M320 210 L435.0 10.8"/><path d="M320 210 L482.6 47.4"/><path d="M320 210 L519.2 95.0"/><path d="M320 210 L542.2 150.5"/>
+    </g>
+    <g transform="translate(320 210)">
+      <circle cx="0" cy="0" r="168" fill="#080d18" fill-opacity=".55" stroke="#b25c50" stroke-opacity=".45" stroke-width="1.5"/>
+      <g transform="scale(.94)">
+    <path d="M-24 -126 Q26 -84 76 -52 Q54 -22 30 2 Q-8 -30 -44 -56 Q-42 -92 -24 -126 Z" fill="none" stroke="url(#gold)" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M-44 -56 L-98 36 Q-112 62 -88 74 Q-64 86 -48 60 L4 -28" fill="none" stroke="url(#gold)" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M16 34 L92 110 M80 34 L28 110" stroke="url(#gold)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M-152 112 L-100 112 L-100 64 L-58 64 L-58 112 L-12 112" fill="none" stroke="url(#accent)" stroke-width="6" stroke-linejoin="round" opacity=".8"/>
+  </g>
+    </g>
+    <path d="M0 420 Q110 368 220 420 T440 420 T640 410 L640 480 L0 480 Z" fill="#070b14" opacity=".8"/>
+    <path d="M0 436 Q120 396 240 436 T480 432 T640 440" fill="none" stroke="#b25c50" stroke-opacity=".28" stroke-width="1.5"/>
+    <rect width="640" height="480" filter="url(#grain)" opacity=".55"/>
+    <rect x="12" y="12" width="616" height="456" rx="18" fill="none" stroke="url(#gold)" stroke-opacity=".18"/>
+  </g>
+</svg>

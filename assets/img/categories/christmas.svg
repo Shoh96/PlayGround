@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Christmas &amp; Easter illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1424"/><stop offset=".55" stop-color="#111a2e"/><stop offset="1" stop-color="#080d18"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#e0b04a" stop-opacity=".42"/><stop offset=".55" stop-color="#e0b04a" stop-opacity=".12"/><stop offset="1" stop-color="#e0b04a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff3cf"/><stop offset=".45" stop-color="#e8bf6b"/><stop offset="1" stop-color="#b7832f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e0b04a"/><stop offset="1" stop-color="#fff3cf"/>
+    </linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .05"/></feComponentTransfer></filter>
+    <clipPath id="clip"><rect width="640" height="480" rx="0"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect width="640" height="480" fill="url(#bg)"/>
+    <circle cx="320" cy="210" r="240" fill="url(#glow)"/>
+    <g opacity=".26" stroke="#e0b04a" stroke-width="1" fill="none">
+      <circle cx="320" cy="210" r="178"/><circle cx="320" cy="210" r="214"/><circle cx="320" cy="210" r="146"/>
+    </g>
+    <g opacity=".16" stroke="url(#gold)" stroke-width="1.5">
+      <path d="M320 210 L550.0 210.0"/><path d="M320 210 L542.2 269.5"/><path d="M320 210 L519.2 325.0"/><path d="M320 210 L482.6 372.6"/><path d="M320 210 L435.0 409.2"/><path d="M320 210 L379.5 432.2"/><path d="M320 210 L320.0 440.0"/><path d="M320 210 L260.5 432.2"/><path d="M320 210 L205.0 409.2"/><path d="M320 210 L157.4 372.6"/><path d="M320 210 L120.8 325.0"/><path d="M320 210 L97.8 269.5"/><path d="M320 210 L90.0 210.0"/><path d="M320 210 L97.8 150.5"/><path d="M320 210 L120.8 95.0"/><path d="M320 210 L157.4 47.4"/><path d="M320 210 L205.0 10.8"/><path d="M320 210 L260.5 -12.2"/><path d="M320 210 L320.0 -20.0"/><path d="M320 210 L379.5 -12.2"/><path d="M320 210 L435.0 10.8"/><path d="M320 210 L482.6 47.4"/><path d="M320 210 L519.2 95.0"/><path d="M320 210 L542.2 150.5"/>
+    </g>
+    <g transform="translate(320 210)">
+      <circle cx="0" cy="0" r="168" fill="#080d18" fill-opacity=".55" stroke="#e0b04a" stroke-opacity=".45" stroke-width="1.5"/>
+      <g transform="scale(.94)">
+    <path d="M0 -132 L20 -58 L96 -74 L44 -14 L94 44 L18 36 L0 116 L-18 36 L-94 44 L-44 -14 L-96 -74 L-20 -58 Z" fill="none" stroke="url(#gold)" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M-64 106 Q-34 62 0 84 Q34 62 64 106 L64 132 L-64 132 Z" fill="none" stroke="url(#accent)" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M0 84 L0 106 M-24 94 L24 94" stroke="url(#accent)" stroke-width="4"/>
+    <g fill="url(#gold)"><circle cx="-116" cy="-116" r="4"/><circle cx="118" cy="-112" r="5"/><circle cx="132" cy="82" r="3"/></g>
+  </g>
+    </g>
+    <path d="M0 420 Q110 368 220 420 T440 420 T640 410 L640 480 L0 480 Z" fill="#070b14" opacity=".8"/>
+    <path d="M0 436 Q120 396 240 436 T480 432 T640 440" fill="none" stroke="#e0b04a" stroke-opacity=".28" stroke-width="1.5"/>
+    <rect width="640" height="480" filter="url(#grain)" opacity=".55"/>
+    <rect x="12" y="12" width="616" height="456" rx="18" fill="none" stroke="url(#gold)" stroke-opacity=".18"/>
+  </g>
+</svg>

@@ -1,0 +1,56 @@
+{
+  "name": "Lumen — Bible Trivia",
+  "short_name": "Lumen",
+  "description": "A beautiful Bible trivia game with 240 questions across 20 categories, a 12-level campaign, daily challenges, and local or online multiplayer.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "categories": ["games", "education", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Quick Play",
+      "short_name": "Quick Play",
+      "description": "Start a ten-question Bible quiz.",
+      "url": "./#/quickplay",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Daily Challenge",
+      "short_name": "Daily",
+      "description": "Play today's ten questions.",
+      "url": "./#/daily",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Verse Library",
+      "short_name": "Library",
+      "description": "Read and copy verses from Scripture.",
+      "url": "./#/library",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
