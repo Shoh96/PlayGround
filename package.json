@@ -1,0 +1,45 @@
+{
+  "name": "scripture-quest",
+  "version": "1.0.0",
+  "description": "A cinematic Bible trivia game with solo, daily, pass-and-play and online multiplayer modes.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite build && vite preview --host 0.0.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shoh96/PlayGround.git"
+  },
+  "keywords": [
+    "bible-trivia",
+    "trivia",
+    "game",
+    "react",
+    "vite",
+    "pwa",
+    "offline"
+  ],
+  "author": "Scripture Quest",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Shoh96/PlayGround/issues"
+  },
+  "homepage": "https://github.com/Shoh96/PlayGround#readme",
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
+    "lucide-react": "^1.61.0",
+    "peerjs": "^1.5.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.5"
+  },
+  "private": true
+}
