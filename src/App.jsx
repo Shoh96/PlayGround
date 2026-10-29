@@ -27,6 +27,7 @@ import { MultiplayerHub } from './components/MultiplayerHub.jsx'
 import { PartyMode } from './components/PartyMode.jsx'
 import { OnlineMode } from './components/OnlineMode.jsx'
 import { Brand, LevelOrb, Modal } from './components/ui.jsx'
+import { QUESTION_COUNT } from './data/questions.js'
 import { dailySetup, levelProgress, localDateKey, pickQuestions, xpForResult } from './lib/game.js'
 import { loadProgress, resetProgress, saveProgress, updateProgressAfterGame } from './lib/storage.js'
 import { playSfx as playSound } from './lib/sound.js'
@@ -415,7 +416,7 @@ function SettingsModal({ open, onClose, settings, onChange, onReset, canInstall,
         </div>
 
         <div className="settings-section settings-about">
-          <div><Sparkles size={15} /><span>140 questions · 14 categories · 4 challenge levels</span></div>
+          <div><Sparkles size={15} /><span>{QUESTION_COUNT.toLocaleString()} questions · 14 categories · 4 challenge levels</span></div>
           <div><Globe2 size={15} /><span>Online rooms connect peer-to-peer through PeerJS.</span></div>
           <div><BookOpen size={15} /><span>Scripture quotations from the King James Version, public domain.</span></div>
           <div><CalendarDays size={15} /><span>Original illustrations and art. No third-party tracking.</span></div>

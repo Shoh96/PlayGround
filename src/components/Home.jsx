@@ -71,7 +71,7 @@ export function Home({
           </div>
           <div className="hero__meta">
             <div>
-              <strong>{QUESTION_COUNT}</strong>
+              <strong>{QUESTION_COUNT.toLocaleString()}</strong>
               <span>questions</span>
             </div>
             <div>
@@ -132,7 +132,7 @@ export function Home({
             <div className="path-card__icon"><BookOpen size={21} /></div>
             <span className="path-card__kicker">Solo quest</span>
             <h3>Follow the narrative</h3>
-            <p>Pick a category and challenge level, then take on a curated round.</p>
+            <p>Pick a category and challenge level, then draw from a {QUESTION_COUNT.toLocaleString()}-question bank.</p>
             <span className="path-card__cta">
               Start exploring <ArrowRight size={15} />
             </span>

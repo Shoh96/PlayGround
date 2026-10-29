@@ -13,7 +13,7 @@ import {
   Trophy,
 } from 'lucide-react'
 import { CATEGORIES, CHALLENGES, CATEGORY_MAP, CHALLENGE_MAP } from '../data/categories.js'
-import { QUESTION_COUNT } from '../data/questions.js'
+import { CATEGORY_QUESTION_COUNTS, QUESTION_COUNT } from '../data/questions.js'
 import { CategoryArt } from './Artwork.jsx'
 
 const ALL_CATEGORY = {
@@ -39,7 +39,7 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
 
   const poolSize = useMemo(() => {
     if (categoryId === 'all') return QUESTION_COUNT
-    return 10
+    return CATEGORY_QUESTION_COUNTS[categoryId] || 0
   }, [categoryId])
 
   function chooseCategory(id) {
@@ -68,11 +68,11 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
         <div>
           <div className="eyebrow">Prepare your heart and mind</div>
           <h1>Choose your battleground</h1>
-          <p>Select a corner of Scripture and the depth of your challenge. Every round is drawn fresh.</p>
+          <p>Select a corner of Scripture and the depth of your challenge. Every round is drawn fresh from {QUESTION_COUNT.toLocaleString()} questions.</p>
         </div>
         <div className="setup__head-stat">
           <span>Question pool</span>
-          <strong>{poolSize}</strong>
+          <strong>{poolSize.toLocaleString()}</strong>
           <small>drawn from {categoryId === 'all' ? `${CATEGORIES.length} categories` : category.name}</small>
         </div>
       </div>
@@ -95,7 +95,7 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
                 <div className="category-option__badge"><Sparkles size={19} /></div>
                 <div>
                   <strong>All Scripture</strong>
-                  <span>Every category</span>
+                  <span>Every category · {QUESTION_COUNT.toLocaleString()}</span>
                 </div>
                 {categoryId === 'all' && <span className="category-option__check"><Check size={14} /></span>}
               </button>
@@ -109,7 +109,7 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
                   <span className="category-option__dot" />
                   <div>
                     <strong>{entry.name}</strong>
-                    <span>{entry.testament}</span>
+                    <span>{entry.testament} · {(CATEGORY_QUESTION_COUNTS[entry.id] || 0).toLocaleString()}</span>
                   </div>
                   {categoryId === entry.id && <span className="category-option__check"><Check size={14} /></span>}
                 </button>

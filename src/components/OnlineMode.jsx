@@ -27,6 +27,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { CATEGORIES, CATEGORY_MAP, CHALLENGES, CHALLENGE_MAP } from '../data/categories.js'
+import { QUESTION_COUNT } from '../data/questions.js'
 import { challengeConfig, pickQuestions, scoreAnswer } from '../lib/game.js'
 import { CategoryArt } from './Artwork.jsx'
 import { Modal, Spinner } from './ui.jsx'
@@ -921,7 +922,7 @@ export function OnlineMode({ progress, settings, online, onBack, onRecord, playS
         <div className="online-trust">
           <div><ShieldIcon /><span>Private peer-to-peer room</span></div>
           <div><Users size={17} /><span>2–8 players</span></div>
-          <div><BookOpen size={17} /><span>140 questions</span></div>
+          <div><BookOpen size={17} /><span>{QUESTION_COUNT.toLocaleString()} questions</span></div>
         </div>
       </div>
     )
