@@ -1,5 +1,6 @@
 import { CHALLENGES, CHALLENGE_MAP, CATEGORY_MAP } from '../data/categories.js'
-import { QUESTIONS } from '../data/questions.js'
+import { questionMatchesFormat } from '../data/formats.js'
+import { QUESTIONS, questionInCategory } from '../data/questions.js'
 import { DAILY_VERSES } from '../data/verses.js'
 
 export const XP_PER_LEVEL = 300
@@ -64,36 +65,100 @@ export function shuffle(items, rng = Math.random) {
   return next
 }
 
+function mixedFormatPlan(count) {
+  const opening = ['trivia', 'wordplay', 'image', 'riddle']
+  const tail = ['recall', 'wordplay', 'recall', 'riddle', 'recall', 'image']
+  return Array.from({ length: count }, (_, index) => {
+    if (index < opening.length) return opening[index]
+    return tail[(index - opening.length) % tail.length]
+  })
+}
+
+function difficultyPlan(count, config) {
+  const levels = ['easy', 'medium', 'hard', 'expert'].filter((level) => (config.weights[level] || 0) > 0)
+  if (!levels.length) return Array.from({ length: count }, () => 'medium')
+  const total = levels.reduce((sum, level) => sum + config.weights[level], 0)
+  return Array.from({ length: count }, (_, index) => {
+    const progress = count <= 1 ? 0.5 : (index + 0.5) / count
+    let roll = progress * total
+    for (const level of levels) {
+      roll -= config.weights[level]
+      if (roll <= 0) return level
+    }
+    return levels[levels.length - 1]
+  })
+}
+
+function takeWeighted(items, config, rng) {
+  if (!items.length) return null
+  const weights = items.map((question) => Math.max(0.05, config.weights[question.difficulty] ?? 1))
+  const total = weights.reduce((sum, weight) => sum + weight, 0)
+  let roll = rng() * total
+  let chosen = items.length - 1
+  for (let index = 0; index < items.length; index += 1) {
+    roll -= weights[index]
+    if (roll <= 0) {
+      chosen = index
+      break
+    }
+  }
+  return items.splice(chosen, 1)[0]
+}
+
 export function pickQuestions({
   category = 'all',
   challenge = 'disciple',
+  format = 'all',
   count = 8,
   seed = Date.now(),
   daily = false,
 } = {}) {
   const challengeConfig = CHALLENGE_MAP[challenge] || CHALLENGE_MAP.disciple
-  const pool = category === 'all' ? QUESTIONS : QUESTIONS.filter((question) => question.category === category)
-  const available = [...pool]
+  const pool = QUESTIONS.filter(
+    (question) => questionInCategory(question, category) && questionMatchesFormat(question, format),
+  )
   const rng = mulberry32(hashString(String(seed)))
   const selected = []
-  const target = Math.min(count, available.length)
+  const selectedIds = new Set()
+  const target = Math.min(count, pool.length)
 
-  while (selected.length < target && available.length) {
-    const weights = available.map((question) => Math.max(0.05, challengeConfig.weights[question.difficulty] ?? 1))
-    const total = weights.reduce((sum, weight) => sum + weight, 0)
-    let roll = rng() * total
-    let chosen = available.length - 1
-    for (let index = 0; index < available.length; index += 1) {
-      roll -= weights[index]
-      if (roll <= 0) {
-        chosen = index
-        break
-      }
-    }
-    selected.push(available.splice(chosen, 1)[0])
+  function pullFrom(candidates, difficulty) {
+    const available = candidates.filter((question) => !selectedIds.has(question.id))
+    if (!available.length) return false
+    const preferred = difficulty ? available.filter((question) => question.difficulty === difficulty) : []
+    const picked = takeWeighted(preferred.length ? preferred : available, challengeConfig, rng)
+    if (!picked) return false
+    selected.push(picked)
+    selectedIds.add(picked.id)
+    return true
   }
 
-  return shuffle(selected, rng).map((question) => {
+  const groups = new Map()
+  for (const question of pool) {
+    const group = groups.get(question.format) || []
+    group.push(question)
+    groups.set(question.format, group)
+  }
+  const plannedFormats = mixedFormatPlan(target)
+  const plannedDifficulties = difficultyPlan(target, challengeConfig)
+
+  for (let slot = 0; slot < target; slot += 1) {
+    if (format === 'all') {
+      const planned = plannedFormats[slot]
+      const candidates = planned === 'recall'
+        ? [...(groups.get('verse') || []), ...(groups.get('book') || [])]
+        : groups.get(planned) || []
+      pullFrom(candidates, plannedDifficulties[slot])
+    } else {
+      pullFrom(pool, plannedDifficulties[slot])
+    }
+  }
+
+  while (selected.length < target) {
+    if (!pullFrom(pool)) break
+  }
+
+  return selected.map((question) => {
     const options = shuffle(question.options, mulberry32(hashString(`${seed}-${question.id}-options`)))
     return {
       ...question,

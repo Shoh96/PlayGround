@@ -55,8 +55,8 @@ export function Home({
             <span>A modern challenge.</span>
           </h1>
           <p className="hero__lead">
-            Journey through {CATEGORIES.length} worlds of Scripture. Answer well, build your streak,
-            and discover the stories that still speak.
+            Journey through {CATEGORIES.length} worlds of Scripture with trivia, picture clues,
+            word play, riddles, and verse recall. Build your streak and discover the stories that still speak.
           </p>
           <div className="hero__actions">
             <button className="btn btn--gold btn--lg" onClick={() => onStartSolo('all')}>
@@ -132,7 +132,7 @@ export function Home({
             <div className="path-card__icon"><BookOpen size={21} /></div>
             <span className="path-card__kicker">Solo quest</span>
             <h3>Follow the narrative</h3>
-            <p>Pick a category and challenge level, then draw from a {QUESTION_COUNT.toLocaleString()}-question bank.</p>
+            <p>Pick a category, game style, and challenge level, then draw from a {QUESTION_COUNT.toLocaleString()}-question bank.</p>
             <span className="path-card__cta">
               Start exploring <ArrowRight size={15} />
             </span>

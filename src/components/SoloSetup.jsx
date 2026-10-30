@@ -7,13 +7,22 @@ import {
   Clock3,
   Flame,
   Gauge,
+  HelpCircle,
+  Image,
   Layers3,
+  Shuffle,
   Sparkles,
   Timer,
   Trophy,
 } from 'lucide-react'
 import { CATEGORIES, CHALLENGES, CATEGORY_MAP, CHALLENGE_MAP } from '../data/categories.js'
-import { CATEGORY_QUESTION_COUNTS, QUESTION_COUNT } from '../data/questions.js'
+import { FORMATS, FORMAT_MAP } from '../data/formats.js'
+import {
+  CATEGORY_FORMAT_QUESTION_COUNTS,
+  CATEGORY_QUESTION_COUNTS,
+  FORMAT_QUESTION_COUNTS,
+  QUESTION_COUNT,
+} from '../data/questions.js'
 import { CategoryArt } from './Artwork.jsx'
 
 const ALL_CATEGORY = {
@@ -32,19 +41,40 @@ const COUNTS = [5, 8, 10]
 export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, playSfx }) {
   const [categoryId, setCategoryId] = useState(CATEGORY_MAP[initialCategory] ? initialCategory : 'all')
   const [challenge, setChallenge] = useState('disciple')
+  const [format, setFormat] = useState('all')
   const [count, setCount] = useState(8)
   const [timerEnabled, setTimerEnabled] = useState(progress.settings.timer !== false)
   const category = categoryId === 'all' ? ALL_CATEGORY : CATEGORY_MAP[categoryId]
   const challengeInfo = CHALLENGE_MAP[challenge]
+  const formatInfo = FORMAT_MAP[format] || FORMAT_MAP.all
 
-  const poolSize = useMemo(() => {
-    if (categoryId === 'all') return QUESTION_COUNT
-    return CATEGORY_QUESTION_COUNTS[categoryId] || 0
-  }, [categoryId])
+  const formatCounts = categoryId === 'all' ? FORMAT_QUESTION_COUNTS : CATEGORY_FORMAT_QUESTION_COUNTS[categoryId] || {}
+
+  function countForFormat(formatId) {
+    if (formatId === 'all') {
+      return categoryId === 'all' ? QUESTION_COUNT : CATEGORY_QUESTION_COUNTS[categoryId] || 0
+    }
+    if (formatId === 'recall') return (formatCounts.verse || 0) + (formatCounts.book || 0)
+    return formatCounts[formatId] || 0
+  }
+
+  const poolSize = useMemo(() => countForFormat(format), [format, categoryId])
 
   function chooseCategory(id) {
     playSfx?.('select')
     setCategoryId(id)
+    const nextCounts = id === 'all' ? FORMAT_QUESTION_COUNTS : CATEGORY_FORMAT_QUESTION_COUNTS[id] || {}
+    const nextCount = format === 'all'
+      ? (id === 'all' ? QUESTION_COUNT : CATEGORY_QUESTION_COUNTS[id] || 0)
+      : format === 'recall'
+        ? (nextCounts.verse || 0) + (nextCounts.book || 0)
+        : nextCounts[format] || 0
+    if (nextCount === 0) setFormat('all')
+  }
+
+  function chooseFormat(id) {
+    playSfx?.('select')
+    setFormat(id)
   }
 
   function chooseChallenge(id) {
@@ -73,7 +103,7 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
         <div className="setup__head-stat">
           <span>Question pool</span>
           <strong>{poolSize.toLocaleString()}</strong>
-          <small>drawn from {categoryId === 'all' ? `${CATEGORIES.length} categories` : category.name}</small>
+          <small>{formatInfo.name.toLowerCase()} · {categoryId === 'all' ? `${CATEGORIES.length} categories` : category.name}</small>
         </div>
       </div>
 
@@ -121,6 +151,48 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
             <div className="setup-section__head">
               <span className="step-number">02</span>
               <div>
+                <h2>Choose a game style</h2>
+                <p>Mix every format, or focus on the kind of play you enjoy.</p>
+              </div>
+            </div>
+            <div className="format-picker">
+              {FORMATS.map((entry) => {
+                const availableCount = countForFormat(entry.id)
+                const selected = entry.id === format
+                return (
+                  <button
+                    key={entry.id}
+                    className={`format-option ${selected ? 'is-selected' : ''}`}
+                    onClick={() => chooseFormat(entry.id)}
+                    disabled={availableCount === 0}
+                    aria-pressed={selected}
+                  >
+                    <span className="format-option__icon">
+                      {entry.id === 'all' && <Layers3 size={18} />}
+                      {entry.id === 'trivia' && <HelpCircle size={18} />}
+                      {entry.id === 'recall' && <BookOpen size={18} />}
+                      {entry.id === 'wordplay' && <Shuffle size={18} />}
+                      {entry.id === 'image' && <Image size={18} />}
+                      {entry.id === 'riddle' && <Sparkles size={18} />}
+                    </span>
+                    <span className="format-option__copy">
+                      <strong>{entry.name}</strong>
+                      <small>{entry.description}</small>
+                    </span>
+                    <span className="format-option__meta">
+                      {availableCount.toLocaleString()}
+                      {selected && <Check size={13} />}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </section>
+
+          <section className="setup-section">
+            <div className="setup-section__head">
+              <span className="step-number">03</span>
+              <div>
                 <h2>Set the depth</h2>
                 <p>Difficulty changes the question mix, clock, and points.</p>
               </div>
@@ -157,7 +229,7 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
 
           <section className="setup-section">
             <div className="setup-section__head">
-              <span className="step-number">03</span>
+              <span className="step-number">04</span>
               <div>
                 <h2>Length & pace</h2>
                 <p>Short enough for a coffee break, long enough to learn.</p>
@@ -210,6 +282,7 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
             <div className="summary-list">
               <div><Clock3 size={15} /><span>Pace</span><strong>{challengeInfo.name}</strong></div>
               <div><Layers3 size={15} /><span>Questions</span><strong>{count}</strong></div>
+              <div><Sparkles size={15} /><span>Style</span><strong>{formatInfo.short}</strong></div>
               <div><Trophy size={15} /><span>Points</span><strong>{challengeInfo.multiplier}×</strong></div>
               <div><Timer size={15} /><span>Timer</span><strong>{timerEnabled ? `${challengeInfo.timer}s` : 'Off'}</strong></div>
             </div>
@@ -219,7 +292,8 @@ export function SoloSetup({ initialCategory = 'all', progress, onBack, onStart, 
             </div>
             <button
               className="btn btn--gold btn--block btn--lg"
-              onClick={() => onStart({ category: categoryId, challenge, count, timerEnabled })}
+              onClick={() => onStart({ category: categoryId, challenge, format, count, timerEnabled })}
+              disabled={poolSize === 0}
             >
               Begin quest <ArrowRight size={17} />
             </button>

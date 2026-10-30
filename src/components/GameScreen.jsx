@@ -14,9 +14,13 @@ import {
   Zap,
 } from 'lucide-react'
 import { CATEGORY_MAP, CHALLENGE_MAP } from '../data/categories.js'
+import { FORMAT_MAP } from '../data/formats.js'
 import { challengeConfig, scoreAnswer } from '../lib/game.js'
+import { hostVoiceSupported, speakHost, stopHostVoice } from '../lib/host.js'
 import { haptic } from '../lib/sound.js'
 import { CategoryArt } from './Artwork.jsx'
+import { HostBot } from './HostBot.jsx'
+import { PictureClue } from './PictureClue.jsx'
 import { Modal } from './ui.jsx'
 
 const LETTERS = ['A', 'B', 'C', 'D']
@@ -25,6 +29,7 @@ export function GameScreen({
   questions,
   category = 'all',
   challenge = 'disciple',
+  format = 'all',
   timerEnabled = true,
   mode = 'solo',
   settings,
@@ -33,6 +38,7 @@ export function GameScreen({
   playSfx,
 }) {
   const config = challengeConfig(challenge)
+  const formatInfo = FORMAT_MAP[format] || FORMAT_MAP.all
   const categoryInfo = CATEGORY_MAP[category] || {
     id: 'all',
     name: 'All Scripture',
@@ -50,20 +56,57 @@ export function GameScreen({
   const [streak, setStreak] = useState(0)
   const [bestStreak, setBestStreak] = useState(0)
   const [timeLeft, setTimeLeft] = useState(config.timer)
+  const [hostReady, setHostReady] = useState(false)
+  const [hostStatus, setHostStatus] = useState('listening')
   const [exitOpen, setExitOpen] = useState(false)
   const questionRef = useRef(null)
+  const hostFallbackRef = useRef(null)
   const question = questions[index]
   const isLast = index === questions.length - 1
   const answeredCorrectly = phase === 'answered' && selected === question.answer
   const currentAnswer = answers[index]
   const correctCount = answers.filter((entry) => entry.correct).length
+  const hostVoiceEnabled = settings?.hostVoice !== false && hostVoiceSupported()
 
   useEffect(() => {
     questionRef.current?.focus()
   }, [index])
 
   useEffect(() => {
-    if (phase !== 'question' || !timerEnabled) return undefined
+    if (!hostVoiceEnabled) {
+      setHostReady(true)
+      setHostStatus(settings?.hostVoice === false ? 'muted' : 'listening')
+      return undefined
+    }
+    const optionText = question.options.map((option, optionIndex) => `${LETTERS[optionIndex]}. ${option}`).join('. ')
+    const text = `Question ${index + 1}. ${question.prompt} ${optionText}.`
+    setHostReady(false)
+    setHostStatus('asking')
+    hostFallbackRef.current = window.setTimeout(() => {
+      setHostReady(true)
+      setHostStatus('listening')
+    }, Math.min(26000, Math.max(4500, text.length * 52)))
+    const cancel = speakHost(text, {
+      onEnd: () => {
+        window.clearTimeout(hostFallbackRef.current)
+        setHostReady(true)
+        setHostStatus('listening')
+      },
+    })
+    return () => {
+      window.clearTimeout(hostFallbackRef.current)
+      cancel()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, hostVoiceEnabled])
+
+  useEffect(() => () => {
+    window.clearTimeout(hostFallbackRef.current)
+    stopHostVoice()
+  }, [])
+
+  useEffect(() => {
+    if (phase !== 'question' || !timerEnabled || !hostReady) return undefined
     if (timeLeft <= 0) {
       answerQuestion(-1)
       return undefined
@@ -71,7 +114,7 @@ export function GameScreen({
     const timer = window.setTimeout(() => setTimeLeft((value) => Math.max(0, value - 1)), 1000)
     return () => window.clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, timeLeft, timerEnabled, index])
+  }, [phase, timeLeft, timerEnabled, index, hostReady])
 
   useEffect(() => {
     if (phase !== 'question') return undefined
@@ -131,9 +174,24 @@ export function GameScreen({
     if (correct && settings?.haptics) {
       haptic(18)
     }
+    window.clearTimeout(hostFallbackRef.current)
+    if (hostVoiceEnabled) {
+      const verdict = correct
+        ? 'Correct.'
+        : choice === -1
+          ? 'Time is up.'
+          : `Not quite. The answer is ${question.options[question.answer]}.`
+      setHostStatus('feedback')
+      speakHost(
+        `${verdict} ${question.explanation} ${question.reference} says: ${question.verse}`,
+        { rate: 0.94, onEnd: () => setHostStatus('review') },
+      )
+    }
   }
 
   function nextQuestion() {
+    window.clearTimeout(hostFallbackRef.current)
+    stopHostVoice()
     if (isLast) {
       const finalAnswers = [...answers]
       if (!currentAnswer) return
@@ -210,6 +268,10 @@ export function GameScreen({
                 <span>Question</span>
                 <strong>{index + 1} / {questions.length}</strong>
               </div>
+              <div>
+                <span>Style</span>
+                <strong>{formatInfo.short}</strong>
+              </div>
             </div>
           </div>
           <div className="game__aside-tip">
@@ -222,6 +284,7 @@ export function GameScreen({
           <div className="question-meta">
             <span className={`difficulty-pill difficulty-${question.difficulty}`}>{question.difficulty}</span>
             <span className="question-meta__category">{categoryInfo.name}</span>
+            <span className={`question-format-pill question-format-pill--${question.format}`}>{FORMAT_MAP[question.format === 'verse' || question.format === 'book' ? 'recall' : question.format]?.short || 'Question'}</span>
             <div className={`question-timer ${timerEnabled && timeLeft <= 5 && phase === 'question' ? 'is-urgent' : ''}`}>
               {timerEnabled ? <Clock3 size={15} /> : <TimerOff size={15} />}
               <span>{timerEnabled ? `${timeLeft}s` : 'Untimed'}</span>
@@ -232,8 +295,21 @@ export function GameScreen({
             <i style={{ width: `${timerPercent}%` }} className={timeLeft <= 5 ? 'is-urgent' : ''} />
           </div>
 
-          <div className="question-card" ref={questionRef} tabIndex={-1}>
+          <HostBot
+            status={hostStatus}
+            enabled={hostVoiceEnabled}
+            onReplay={hostVoiceEnabled ? () => {
+              const optionText = question.options.map((option, optionIndex) => `${LETTERS[optionIndex]}. ${option}`).join('. ')
+              setHostStatus('asking')
+              speakHost(`Question ${index + 1}. ${question.prompt} ${optionText}.`, {
+                onEnd: () => setHostStatus('listening'),
+              })
+            } : null}
+          />
+
+          <div className={`question-card question-card--${question.format}`} ref={questionRef} tabIndex={-1}>
             <span className="question-card__index">Question {index + 1}</span>
+            {question.symbols?.length > 0 && <PictureClue symbols={question.symbols} category={question.category} />}
             <h1>{question.prompt}</h1>
             <div className="answers" role="group" aria-label="Answer choices">
               {question.options.map((option, optionIndex) => {

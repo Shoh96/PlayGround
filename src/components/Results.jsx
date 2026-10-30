@@ -19,10 +19,11 @@ import {
 import { CATEGORY_MAP } from '../data/categories.js'
 import { QUESTION_MAP } from '../data/questions.js'
 import { levelProgress, resultRank } from '../lib/game.js'
+import { speakHost, stopHostVoice } from '../lib/host.js'
 import { ACHIEVEMENT_MAP } from '../lib/achievements.js'
 import { AchievementIcon } from './ui.jsx'
 
-export function Results({ result, progress, onHome, onReplay, onProgress, onShare, playSfx }) {
+export function Results({ result, progress, settings, onHome, onReplay, onProgress, onShare, playSfx }) {
   const [reviewOpen, setReviewOpen] = useState(true)
   const [shareNote, setShareNote] = useState('')
   const accuracy = result.total ? Math.round((result.correct / result.total) * 100) : 0
@@ -41,6 +42,21 @@ export function Results({ result, progress, onHome, onReplay, onProgress, onShar
 
   useEffect(() => {
     playSfx?.(accuracy >= 60 ? 'finish' : 'wrong')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (settings?.hostVoice === false) return undefined
+    const finish = result.leveledUp
+      ? `Level up. You are now level ${level.level}, ${level.title}.`
+      : `You are level ${level.level}, ${level.title}.`
+    const cancel = speakHost(
+      `Quest complete. You answered ${result.correct} of ${result.total} correctly, for ${accuracy} percent accuracy and ${result.score} points. ${finish}`,
+      { rate: 0.94 },
+    )
+    return () => {
+      cancel()
+      stopHostVoice()
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function shareResult() {

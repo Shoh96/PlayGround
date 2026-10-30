@@ -28,6 +28,7 @@ export const DEFAULT_PROGRESS = {
     sound: true,
     haptics: true,
     timer: true,
+    hostVoice: true,
     reduceMotion: false,
     playerName: 'Pilgrim',
   },

@@ -12,6 +12,7 @@ import {
   Users,
   Volume2,
   VolumeX,
+  Bot,
   Vibrate,
   Timer,
   Leaf,
@@ -109,6 +110,7 @@ export default function App() {
     const questions = pickQuestions({
       category: config.category,
       challenge: config.challenge,
+      format: config.format || 'all',
       count: config.count,
       seed: `${Date.now()}-${Math.random()}`,
     })
@@ -205,6 +207,7 @@ export default function App() {
           questions={route.questions}
           category={route.config.category}
           challenge={route.config.challenge}
+          format={route.config.format || 'all'}
           timerEnabled={route.config.timerEnabled !== false}
           mode={route.mode}
           settings={progress.settings}
@@ -219,6 +222,7 @@ export default function App() {
         <Results
           result={route.result}
           progress={progress}
+          settings={progress.settings}
           onHome={() => navigate('home')}
           onReplay={() => replayFromResults(route.result)}
           onProgress={() => navigate('progress')}
@@ -390,6 +394,13 @@ function SettingsModal({ open, onClose, settings, onChange, onReset, canInstall,
             description="New solo quests begin with the timer on."
             active={settings.timer}
             onClick={() => onChange({ timer: !settings.timer })}
+          />
+          <SettingToggle
+            icon={<Bot size={18} />}
+            title="Scribe voice host"
+            description="Reads questions, feedback, and scripture aloud when supported."
+            active={settings.hostVoice !== false}
+            onClick={() => onChange({ hostVoice: settings.hostVoice === false })}
           />
           <SettingToggle
             icon={<Leaf size={18} />}
