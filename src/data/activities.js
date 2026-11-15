@@ -2703,9 +2703,9 @@ export const PLACES = [
     "category": "numbers-geography",
     "difficulty": "easy",
     "testament": "NT",
-    "clue": "The town where Ruth met Boaz and where the line leading to David is traced.",
-    "riddle": "I am known for this: The town where Ruth met Boaz and where the line leading to David is traced",
-    "summary": "The town where Ruth met Boaz and where the line leading to David is traced.",
+    "clue": "The town of David, where Joseph traveled for the census, where Jesus was born, and where Ruth's story with Boaz also unfolds.",
+    "riddle": "I am known for this: The town of David, where Joseph traveled for the census, where Jesus was born, and where Ruth's story with Boaz also unfolds",
+    "summary": "Bethlehem is the town of David, the birthplace of Jesus, and the setting for part of Ruth's story with Boaz.",
     "reference": "Luke 2:4",
     "verse": "And Joseph also went up from Galilee, out of the city of Nazareth, into Judæa, unto the city of David, which is called Bethlehem; (because he was of the house and lineage of David:)",
     "symbols": [
